@@ -6,7 +6,7 @@ execute:
     echo: false
 ---
 
-Colleges vary widely in their graduation rates, and tuition is one factor that may help explain those differences so students can end up for a place where they can succeedom. Using 2013 IPEDS data on nearly 900 U.S. four-year colleges, we estimate the difference in expected graduation rate between colleges that charge $20,000 in tuition and those that charge $30,000. One concern is the 13-year gap between our data (2013) and the question (2026). Tuition has risen much faster than inflation over that span, and the relationship between price and graduation rate may have shifted. The 2013 coefficients we estimate may not reflect what they would be if we could fit the same model on today’s colleges. We model graduation rate as a linear function of tuition and selectivity, allowing each Barron's selectivity category to shift the predicted graduation rate up or down while tuition's effect is held constant across categories.
+Colleges vary widely in their graduation rates, and tuition is one factor that may help explain those differences so students can end up for a place where they can succeedom. Using 2013 IPEDS data on nearly 900 U.S. four-year colleges, we estimate the difference in expected graduation rate between colleges that charge $20,000 in tuition and those that charge $30,000. One concern is the 13-year gap between our data (2013) and the question (2026). Tuition has risen much faster than inflation over that span, and the relationship between price and graduation rate may have shifted. The 2013 coefficients we estimate may not reflect what they would be if we could fit the same model on today’s colleges. We model graduation rate as a linear function of tuition and selectivity, allowing each Barron's selectivity category to shift the predicted graduation rate up or down while tuition's effect is held constant across categories. We estimate that within a given selectivity tier, each $10,000 of tuition is associated with about 9 percentage points more graduation rate, with a 95% confidence interval of 7 to 11 percentage points; Elite colleges graduate about 20 percentage points more students than Lowly Selective ones at comparable tuition.
 
 ```{r}
 #| label: setup
@@ -14,7 +14,9 @@ Colleges vary widely in their graduation rates, and tuition is one factor that m
 library(tidyverse)
 library(primer.data)
 library(tidymodels)
+library(marginaleffects)
 library(broom) 
+
 ```
 
 ## Tuition and Graduation Rate
@@ -65,6 +67,41 @@ fit_colleges <- linear_reg() |>
 tidy(fit_colleges, conf.int = TRUE)
 ```
 
+```{r}
+predictions(fit_colleges)
+```
+
+```{r}
+plot_predictions(fit_colleges, condition = c("tuition", "selectivity"), draw = FALSE)
+```
+
+```{r}
+#| label: plot-predictions
+#| warning: false
+#| message: false
+#| fig.width: 8
+#| fig.height: 6
+augment(fit_colleges, new_data = x) |> 
+  ggplot(aes(x = tuition, y = grad_rate, color = selectivity)) +
+  geom_point(alpha = 0.4) +
+  geom_line(aes(y = .pred), linewidth = 1.2) +
+  labs(
+    title = "Graduation Rate vs. Tuition by Selectivity",
+    subtitle = "Higher tuition and greater selectivity are both associated with higher graduation rates.",
+    x = "Tuition (in tens of thousands of dollars)",
+    y = "Graduation Rate",
+    color = "Selectivity Tier"
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  scale_color_viridis_d(option = "plasma", end = 0.9) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 15, margin = margin(b = 6)),
+    plot.subtitle = element_text(size = 10.5, color = "gray30", margin = margin(b = 12)),
+    legend.position = "right",
+    panel.grid.minor = element_blank()
+  )
+```
 
 
 
