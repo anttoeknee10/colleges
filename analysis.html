@@ -73,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Colleges vary widely in their graduation rates, and tuition is one factor that may help explain those differences so students can end up for a place where they can succeedom. Using 2013 IPEDS data on nearly 900 U.S. four-year colleges, we estimate the difference in expected graduation rate between colleges that charge $20,000 in tuition and those that charge $30,000. One concern is the 13-year gap between our data (2013) and the question (2026). Tuition has risen much faster than inflation over that span, and the relationship between price and graduation rate may have shifted. The 2013 coefficients we estimate may not reflect what they would be if we could fit the same model on today’s colleges.</p>
+<p>Colleges vary widely in their graduation rates, and tuition is one factor that may help explain those differences so students can end up for a place where they can succeedom. Using 2013 IPEDS data on nearly 900 U.S. four-year colleges, we estimate the difference in expected graduation rate between colleges that charge $20,000 in tuition and those that charge $30,000. One concern is the 13-year gap between our data (2013) and the question (2026). Tuition has risen much faster than inflation over that span, and the relationship between price and graduation rate may have shifted. The 2013 coefficients we estimate may not reflect what they would be if we could fit the same model on today’s colleges. We model graduation rate as a linear function of tuition and selectivity, allowing each Barron’s selectivity category to shift the predicted graduation rate up or down while tuition’s effect is held constant across categories.</p>
 <section id="tuition-and-graduation-rate" class="level2">
 <h2 class="anchored" data-anchor-id="tuition-and-graduation-rate">Tuition and Graduation Rate</h2>
 <p>We now examine how the graduation rate varies with the cost of tuition.</p>
@@ -84,6 +84,36 @@ ul.task-list li input[type="checkbox"] {
 <p><img src="analysis_files/figure-html/plot-grad-rate-vs-tuition-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+
+Call:
+stats::lm(formula = grad_rate ~ tuition + selectivity, data = data)
+
+Coefficients:
+                    (Intercept)                          tuition  
+                        0.48662                          0.08968  
+    selectivityHighly Selective  selectivityModerately Selective  
+                       -0.07840                         -0.12765  
+     selectivityLowly Selective         selectivityNon-selective  
+                       -0.21320                         -0.20546  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  term                  estimate std.error statistic  p.value conf.low conf.high
+  &lt;chr&gt;                    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)             0.487    0.0390      12.5  1.70e-31   0.410     0.563 
+2 tuition                 0.0897   0.00806     11.1  4.97e-26   0.0738    0.106 
+3 selectivityHighly Se…  -0.0784   0.0180      -4.35 1.66e- 5  -0.114    -0.0430
+4 selectivityModeratel…  -0.128    0.0172      -7.44 4.16e-13  -0.161    -0.0939
+5 selectivityLowly Sel…  -0.213    0.0190     -11.2  2.19e-26  -0.251    -0.176 
+6 selectivityNon-selec…  -0.205    0.0331      -6.20 1.12e- 9  -0.271    -0.140 </code></pre>
 </div>
 </div>
 </section>
