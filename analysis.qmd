@@ -1,0 +1,48 @@
+---
+title: "Colleges"
+format: html
+author: Anthony Gao
+execute:
+    echo: false
+---
+
+Colleges vary widely in their graduation rates, and tuition is one factor that may help explain those differences so students can end up for a place where they can succeedom. Using 2013 IPEDS data on nearly 900 U.S. four-year colleges, we estimate the difference in expected graduation rate between colleges that charge $20,000 in tuition and those that charge $30,000.
+
+```{r}
+#| label: setup
+#| message: false
+library(tidyverse)
+library(primer.data)
+```
+
+## Tuition and Graduation Rate
+
+We now examine how the graduation rate varies with the cost of tuition.
+
+```{r}
+#| label: plot-grad-rate-vs-tuition
+#| warning: false
+colleges |> 
+  ggplot(aes(x = tuition, y = grad_rate)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "loess", formula = "y ~ x", se = FALSE) +
+  labs(
+    title = "Graduation Rate vs. Tuition",
+    x = "Tuition (in tens of thousands of dollars)",
+    y = "Graduation Rate"
+  )
+```
+
+```{r}
+#| label: clean-data
+#| cache: true
+x <- colleges |> 
+  select(tuition, grad_rate, selectivity) |> 
+  filter(tuition > 2) |> 
+  drop_na() |> 
+  mutate(selectivity = factor(selectivity, 
+                              levels = c("Elite", "Highly Selective", "Moderately Selective", "Lowly Selective", "Non-selective"), 
+                              ordered = FALSE))
+```
+
+
