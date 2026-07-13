@@ -6,8 +6,6 @@ execute:
     echo: false
 ---
 
-Colleges vary widely in their graduation rates, and tuition is one factor that may help explain those differences so students can end up for a place where they can succeedom. Using 2013 IPEDS data on nearly 900 U.S. four-year colleges, we estimate the difference in expected graduation rate between colleges that charge $20,000 in tuition and those that charge $30,000. One concern is the 13-year gap between our data (2013) and the question (2026). Tuition has risen much faster than inflation over that span, and the relationship between price and graduation rate may have shifted. The 2013 coefficients we estimate may not reflect what they would be if we could fit the same model on today’s colleges. We model graduation rate as a linear function of tuition and selectivity, allowing each Barron's selectivity category to shift the predicted graduation rate up or down while tuition's effect is held constant across categories. We estimate that within a given selectivity tier, each $10,000 of tuition is associated with about 9 percentage points more graduation rate, with a 95% confidence interval of 7 to 11 percentage points; Elite colleges graduate about 20 percentage points more students than Lowly Selective ones at comparable tuition.
-
 ```{r}
 #| label: setup
 #| message: false
@@ -63,17 +61,7 @@ fit_colleges <- linear_reg() |>
   fit(grad_rate ~ tuition + selectivity, data = x)
 ```
 
-```{r}
-tidy(fit_colleges, conf.int = TRUE)
-```
 
-```{r}
-predictions(fit_colleges)
-```
-
-```{r}
-plot_predictions(fit_colleges, condition = c("tuition", "selectivity"), draw = FALSE)
-```
 
 ```{r}
 #| label: plot-predictions
@@ -101,6 +89,22 @@ augment(fit_colleges, new_data = x) |>
     legend.position = "right",
     panel.grid.minor = element_blank()
   )
+```
+
+Colleges vary widely in their graduation rates, and tuition is one factor that may help explain those differences so students can end up for a place where they can succeedom. Using 2013 IPEDS data on nearly 900 U.S. four-year colleges, we estimate the difference in expected graduation rate between colleges that charge $20,000 in tuition and those that charge $30,000. One concern is the 13-year gap between our data (2013) and the question (2026). Tuition has risen much faster than inflation over that span, and the relationship between price and graduation rate may have shifted. The 2013 coefficients we estimate may not reflect what they would be if we could fit the same model on today’s colleges. We model graduation rate as a linear function of tuition and selectivity, allowing each Barron's selectivity category to shift the predicted graduation rate up or down while tuition's effect is held constant across categories. We estimate that within a given selectivity tier, each $10,000 of tuition is associated with about 9 percentage points more graduation rate, with a 95% confidence interval of 7 to 11 percentage points; Elite colleges graduate about 20 percentage points more students than Lowly Selective ones at comparable tuition.
+
+## Diagnostics and Model Tables
+
+```{r}
+tidy(fit_colleges, conf.int = TRUE)
+```
+
+```{r}
+predictions(fit_colleges)
+```
+
+```{r}
+plot_predictions(fit_colleges, condition = c("tuition", "selectivity"))
 ```
 
 
